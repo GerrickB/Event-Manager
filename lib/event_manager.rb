@@ -1,7 +1,7 @@
 require 'csv'
 
-def clean_zipcode(zipcode)
-  zipcode.to_s.rjust(5, '0')[0..4]
+def clean_zip_code(zip_code)
+  zip_code.to_s.rjust(5, '0')[0..4]
 end
 
 puts 'EventManager initialized.'
@@ -15,7 +15,7 @@ contents = CSV.open(
 contents.each do |row|
   name = row[:first_name]
 
-  zipcode = clean_zipcode(row[:zipcode])
+  zip_code = clean_zip_code(row[:zip_code])
 
-  puts "#{name} #{zipcode}"
+  puts "#{name} #{zip_code}"
 end
