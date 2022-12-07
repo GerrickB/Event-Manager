@@ -1,8 +1,8 @@
 require 'csv'
 require 'google/apis/civicinfo_v2'
 
-def clean_zip_code(zip_code)
-  zip_code.to_s.rjust(5, '0')[0..4]
+def clean_zip_code(zipcode)
+  zipcode.to_s.rjust(5, '0')[0..4]
 end
 
 def legislators_by_zipcode(zip)
@@ -36,12 +36,23 @@ contents = CSV.open(
   header_converters: :symbol
 )
 
+template_letter = File.read('form_letter.html')
+
 contents.each do |row|
   name = row[:first_name]
 
-  zip_code = clean_zip_code(row[:zipcode])
+  zipcode = clean_zip_code(row[:zipcode])
 
-  legislators = legislators_by_zipcode(zip_code)
+  legislators = legislators_by_zipcode(zipcode)
 
-  puts "#{name} #{zip_code} #{legislators}"
+  #personal_letter = template_letter.gsub('FIRST_NAME', name)
+  #personal_letter.gsub!('LEGISLATORS', legislators)
+  #alternate way
+  personal_letter = template_letter.gsub('FIRST_NAME', name)
+  personal_letter = personal_letter.gsub('LEGISLATORS', legislators)
+  
+  #old one
+  #puts "#{name} #{zipcode} #{legislators}"
+  #new one
+  puts personal_letter
 end
