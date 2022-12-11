@@ -53,10 +53,18 @@ contents.each do |row|
   #personal_letter = template_letter.gsub('FIRST_NAME', name)
   #personal_letter = personal_letter.gsub('LEGISLATORS', legislators)
   form_letter = erb_template.result(binding)
+
+  Dir.mkdir('output') unless Dir.exist?('output')
+
+  filename = "output/thanks_#{id}.html"
+
+  File.open(filename, 'w') do |file|
+    file.puts form_letter
+  end
   
   #old one
   #puts "#{name} #{zipcode} #{legislators}"
   #new one
   #puts personal_letter
-  puts form_letter
+  #puts form_letter
 end
