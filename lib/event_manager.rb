@@ -41,6 +41,7 @@ template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 
 contents.each do |row|
+  id = row[0]
   name = row[:first_name]
 
   zipcode = clean_zip_code(row[:zipcode])
