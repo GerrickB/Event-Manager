@@ -55,7 +55,16 @@ contents.each do |row|
 
   zipcode = clean_zip_code(row[:zipcode])
 
+  homephone = row[:homephone]
+
+  #format phone number
+  homephone = homephone.delete(' ()-.+')
+  # or homephone = row[:homephone].delete(' ()-.+')
+
   #If the phone number is less than 10 digits, assume that it is a bad number
+  if homephone.length < 10
+    homephone = "modified " + homephone.ljust(10, '0')
+  end
 
   #If the phone number is 10 digits, assume that it is good
 
@@ -70,4 +79,6 @@ contents.each do |row|
   form_letter = erb_template.result(binding)
 
   save_thank_you_letter(id, form_letter)
+
+  p homephone
 end
