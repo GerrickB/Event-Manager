@@ -63,20 +63,25 @@ contents.each do |row|
 
   #If the phone number is less than 10 digits, assume that it is a bad number
   if homephone.length < 10
-    puts "has less than 10 "
+    puts "#{homephone} has less than 10 digits"
     homephone = homephone.ljust(10, '0')
+    puts "new number:"
 
   #If the phone number is 10 digits, assume that it is good
 
   #If the phone number is 11 digits and the first number is 1, trim the 1 and use the remaining 10 digits. (use a string digit when comparing because phone number is in string )
   elsif (homephone.length == 11) && (homephone[0] == '1')
-    puts "has 11 digits and first number is 1 " + homephone
+    puts "#{homephone} has 11 digits and first number is 1"
     homephone = homephone[1..11]
 
   #If the phone number is 11 digits and the first number is not 1, then it is a bad number
-
+  elsif (homephone.length == 11) && (homephone[0] != '1')
+    puts "#{homephone} is a bad number"
   #If the phone number is more than 11 digits, assume that it is a bad number
+  elsif homephone.length > 11
+    puts "#{homephone} is a bad number"
   end
+  
   legislators = legislators_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding)
