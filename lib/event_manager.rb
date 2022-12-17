@@ -6,6 +6,35 @@ def clean_zip_code(zipcode)
   zipcode.to_s.rjust(5, '0')[0..4]
 end
 
+def clean_home_phone(phone)
+  #format phone number
+  phone = phone.delete(' ()-.+')
+  # or homephone = row[:homephone].delete(' ()-.+')
+
+  #if phone.nil?
+    #'0000000000'
+  #If the phone number is less than 10 digits, assume that it is a bad number
+  if phone.length < 10
+    puts "#{phone} has less than 10 digits"
+    puts "new number:"
+    phone.ljust(10, '0') 
+  #If the phone number is 11 digits and the first number is 1, trim the 1 and use the remaining 10 digits. (use a string digit when comparing because phone number is in string )
+  elsif (phone.length == 11) && (phone[0] == '1')
+    puts "#{phone} has 11 digits and first number is 1"
+    puts "new number:"
+    phone[1..11]
+
+  #If the phone number is 11 digits and the first number is not 1, then it is a bad number
+  elsif (phone.length == 11) && (phone[0] != '1')
+    puts "#{phone} is a bad number"
+  #If the phone number is more than 11 digits, assume that it is a bad number
+  elsif phone.length > 11
+    puts "#{phone} is a bad number"
+  else
+    phone
+  end
+end
+
 def legislators_by_zipcode(zip)
   civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
   civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
@@ -55,32 +84,8 @@ contents.each do |row|
 
   zipcode = clean_zip_code(row[:zipcode])
 
-  homephone = row[:homephone]
+  homephone = clean_home_phone(row[:homephone])
 
-  #format phone number
-  homephone = homephone.delete(' ()-.+')
-  # or homephone = row[:homephone].delete(' ()-.+')
-
-  #If the phone number is less than 10 digits, assume that it is a bad number
-  if homephone.length < 10
-    puts "#{homephone} has less than 10 digits"
-    homephone = homephone.ljust(10, '0')
-    puts "new number:"
-
-  #If the phone number is 10 digits, assume that it is good
-
-  #If the phone number is 11 digits and the first number is 1, trim the 1 and use the remaining 10 digits. (use a string digit when comparing because phone number is in string )
-  elsif (homephone.length == 11) && (homephone[0] == '1')
-    puts "#{homephone} has 11 digits and first number is 1"
-    homephone = homephone[1..11]
-
-  #If the phone number is 11 digits and the first number is not 1, then it is a bad number
-  elsif (homephone.length == 11) && (homephone[0] != '1')
-    puts "#{homephone} is a bad number"
-  #If the phone number is more than 11 digits, assume that it is a bad number
-  elsif homephone.length > 11
-    puts "#{homephone} is a bad number"
-  end
   
   legislators = legislators_by_zipcode(zipcode)
 
