@@ -11,10 +11,9 @@ def clean_home_phone(phone)
   phone = phone.delete(' ()-.+')
   # or homephone = row[:homephone].delete(' ()-.+')
 
-  #if phone.nil?
-    #'0000000000'
-  #If the phone number is less than 10 digits, assume that it is a bad number
-  if phone.length < 10
+  if phone.nil?
+    '0000000000'
+  elsif phone.length < 10
     puts "#{phone} has less than 10 digits"
     puts "new number:"
     phone.ljust(10, '0') 
