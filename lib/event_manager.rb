@@ -83,7 +83,9 @@ contents.each do |row|
 
   zipcode = clean_zip_code(row[:zipcode])
 
-  homephone = clean_home_phone(row[:homephone])
+  #homephone = clean_home_phone(row[:homephone])
+
+  regdate = row[:regdate]
 
   
   legislators = legislators_by_zipcode(zipcode)
@@ -92,5 +94,5 @@ contents.each do |row|
 
   save_thank_you_letter(id, form_letter)
 
-  p homephone
+  p regdate
 end
