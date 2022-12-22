@@ -35,9 +35,9 @@ def clean_home_phone(phone)
   end
 end
 
-def get_peak_hours(regdate)
-  peak = Time.strptime(regdate, "%m/%d/%Y %k:%M").hour
-  peak
+def get_avg_peak_hour(hours)
+  p avg_peak = hours.reduce { |sum, hour| sum + hour }
+  avg_peak / hours.length
 end
 
 def legislators_by_zipcode(zip)
@@ -82,16 +82,17 @@ contents = CSV.open(
 
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
+peak_hours = []
 
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
+  regdate = row[:regdate]
+  peak_hours.push(Time.strptime(regdate, "%m/%d/%Y %k:%M").hour)
 
   zipcode = clean_zip_code(row[:zipcode])
 
   #homephone = clean_home_phone(row[:homephone])
-
-  peak_hours = get_peak_hours(row[:regdate])
 
   legislators = legislators_by_zipcode(zipcode)
 
@@ -99,5 +100,8 @@ contents.each do |row|
 
   save_thank_you_letter(id, form_letter)
 
-  p peak_hours
+  #p regdate
+  #p peak_hours
 end
+
+p get_avg_peak_hour(peak_hours)
