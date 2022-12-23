@@ -40,6 +40,16 @@ def get_avg_peak_hour(hours)
   avg_peak / hours.length
 end
 
+def get_days(regdate)
+  regdate = Time.strptime(regdate, "%m/%d/%Y")
+  regdate = regdate.strftime("%-d/%-m/%Y")
+  array = regdate.split('/')
+  array.map { |num| num[0] = '2' if num[0] == '0'}
+  array = array.join('/')
+  regdate = Time.parse(array).day
+  regdate
+end
+
 def legislators_by_zipcode(zip)
   civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
   civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
@@ -83,12 +93,16 @@ contents = CSV.open(
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 peak_hours = []
+day_list = []
 
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
   regdate = row[:regdate]
+
   peak_hours.push(Time.strptime(regdate, "%m/%d/%Y %k:%M").hour)
+
+  day_list.push(get_days(regdate))
 
   zipcode = clean_zip_code(row[:zipcode])
 
@@ -100,8 +114,8 @@ contents.each do |row|
 
   save_thank_you_letter(id, form_letter)
 
-  #p regdate
   #p peak_hours
 end
 
-p get_avg_peak_hour(peak_hours)
+#p get_avg_peak_hour(peak_hours)
+p day_list
