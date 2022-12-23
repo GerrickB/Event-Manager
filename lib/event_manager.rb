@@ -44,10 +44,11 @@ def get_days(regdate)
   regdate = Time.strptime(regdate, "%m/%d/%Y")
   regdate = regdate.strftime("%-d/%-m/%Y")
   array = regdate.split('/')
+  # if year start with 0 replace it with 2
   array.map { |num| num[0] = '2' if num[0] == '0'}
   array = array.join('/')
-  regdate = Time.parse(array).day
-  regdate
+  regdate = Time.parse(array)
+  Date.new(regdate.year,regdate.month, regdate.day).wday
 end
 
 def legislators_by_zipcode(zip)
@@ -93,7 +94,7 @@ contents = CSV.open(
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 peak_hours = []
-day_list = []
+days = []
 
 contents.each do |row|
   id = row[0]
@@ -102,7 +103,7 @@ contents.each do |row|
 
   peak_hours.push(Time.strptime(regdate, "%m/%d/%Y %k:%M").hour)
 
-  day_list.push(get_days(regdate))
+  days.push(get_days(regdate))
 
   zipcode = clean_zip_code(row[:zipcode])
 
@@ -118,4 +119,4 @@ contents.each do |row|
 end
 
 #p get_avg_peak_hour(peak_hours)
-p day_list
+p days
